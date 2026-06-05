@@ -1,15 +1,17 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from 'react';
 import { Pressable, StyleSheet, View, ViewStyle } from 'react-native';
-import {
-    PanGestureHandler,
-    PanGestureHandlerGestureEvent,
-} from 'react-native-gesture-handler';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
     Easing,
     Extrapolate,
     interpolate,
     runOnJS,
-    useAnimatedGestureHandler,
     useAnimatedStyle,
     useDerivedValue,
     useSharedValue,
@@ -77,6 +79,7 @@ const BookPagePortrait = React.forwardRef<PortraitBookInstance, IBookPageProps>(
             : [-containerSize.width, 0, containerSize.width];
 
         const x = useSharedValue(0);
+        const startX = useSharedValue(0);
 
         const isMounted = useRef(false);
         const rotateYAsDeg = useSharedValue(0);
@@ -138,76 +141,92 @@ const BookPagePortrait = React.forwardRef<PortraitBookInstance, IBookPageProps>(
             };
         });
 
-        const onPanGestureHandler = useAnimatedGestureHandler<
-            PanGestureHandlerGestureEvent,
-            { x: number }
-        >({
-            // @ts-ignore
-            onStart: (event, ctx) => {
-                ctx.x = x.value;
-                if (onPageDragStart && typeof onPageDragStart === 'function') {
-                    runOnJS(onPageDragStart)();
-                }
-            },
-            onActive: (event, ctx) => {
-                const newX = ctx.x + event.translationX;
-                const degrees = getDegreesForX(newX);
-                x.value = newX;
-                rotateYAsDeg.value = degrees;
-                if (onPageDrag && typeof onPageDrag === 'function') {
-                    runOnJS(onPageDrag)();
-                }
-            },
-            onEnd: (event) => {
-                if (onPageDragEnd && typeof onPageDragEnd === 'function') {
-                    runOnJS(onPageDragEnd)();
-                }
-
-                const snapTo = snapPoint(x.value, event.velocityX, pSnapPoints);
-                const id = snapTo > 0 ? -1 : snapTo < 0 ? 1 : 0;
-
-                if (!next && id > 0) {
-                    // reset
-                    x.value = withTiming(0);
-                    rotateYAsDeg.value = withTiming(0);
-                    // runOnJS(onDrag)(false);
-                    return;
-                }
-
-                const degrees = getDegreesForX(snapTo);
-                x.value = snapTo;
-                if (rotateYAsDeg.value === degrees) {
-                    // already same value
-                    // debugValue('already there');
-                    runOnJS(onPageFlip)(id, false);
-                } else {
-                    runOnJS(setIsAnimating)(true);
-
-                    const progress =
-                        Math.abs(rotateYAsDeg.value - degrees) / 100;
-                    const duration = clamp(
-                        800 * progress - Math.abs(0.1 * event.velocityX),
-                        350,
-                        1000
-                    );
-                    rotateYAsDeg.value = withTiming(
-                        degrees,
-                        {
-                            ...timingConfig,
-                            duration: duration,
-                        },
-                        () => {
-                            if (snapTo === 0) {
-                                //
-                            }
-                            runOnJS(onPageFlip)(id, false);
-                        }
-                    );
-                }
-            },
-        });
-
         const gesturesEnabled = enabled && !isAnimating;
+
+        const panGesture = useMemo(
+            () =>
+                Gesture.Pan()
+                    .enabled(gesturesEnabled)
+                    .onBegin(() => {
+                        startX.value = x.value;
+                        if (
+                            onPageDragStart &&
+                            typeof onPageDragStart === 'function'
+                        ) {
+                            runOnJS(onPageDragStart)();
+                        }
+                    })
+                    .onUpdate((event) => {
+                        const newX = startX.value + event.translationX;
+                        const degrees = getDegreesForX(newX);
+                        x.value = newX;
+                        rotateYAsDeg.value = degrees;
+                        if (onPageDrag && typeof onPageDrag === 'function') {
+                            runOnJS(onPageDrag)();
+                        }
+                    })
+                    .onEnd((event) => {
+                        if (
+                            onPageDragEnd &&
+                            typeof onPageDragEnd === 'function'
+                        ) {
+                            runOnJS(onPageDragEnd)();
+                        }
+
+                        const snapTo = snapPoint(
+                            x.value,
+                            event.velocityX,
+                            pSnapPoints
+                        );
+                        const id = snapTo > 0 ? -1 : snapTo < 0 ? 1 : 0;
+
+                        if (!next && id > 0) {
+                            x.value = withTiming(0);
+                            rotateYAsDeg.value = withTiming(0);
+                            return;
+                        }
+
+                        const degrees = getDegreesForX(snapTo);
+                        x.value = snapTo;
+                        if (rotateYAsDeg.value === degrees) {
+                            runOnJS(onPageFlip)(id, false);
+                        } else {
+                            runOnJS(setIsAnimating)(true);
+
+                            const progress =
+                                Math.abs(rotateYAsDeg.value - degrees) / 100;
+                            const duration = clamp(
+                                800 * progress -
+                                    Math.abs(0.1 * event.velocityX),
+                                350,
+                                1000
+                            );
+                            rotateYAsDeg.value = withTiming(
+                                degrees,
+                                {
+                                    ...timingConfig,
+                                    duration: duration,
+                                },
+                                () => {
+                                    runOnJS(onPageFlip)(id, false);
+                                }
+                            );
+                        }
+                    }),
+            // Shared values and worklets are stable refs.
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+            [
+                gesturesEnabled,
+                containerSize.width,
+                pSnapPoints,
+                next,
+                onPageDragStart,
+                onPageDrag,
+                onPageDragEnd,
+                onPageFlip,
+                setIsAnimating,
+            ]
+        );
 
         const iPageProps = {
             containerSize,
@@ -219,10 +238,7 @@ const BookPagePortrait = React.forwardRef<PortraitBookInstance, IBookPageProps>(
 
         return (
             <Animated.View style={containerStyle}>
-                <PanGestureHandler
-                    onGestureEvent={onPanGestureHandler}
-                    enabled={gesturesEnabled}
-                >
+                <GestureDetector gesture={panGesture}>
                     <Animated.View style={containerStyle}>
                         {isPressable && prev && (
                             <Pressable
@@ -277,7 +293,7 @@ const BookPagePortrait = React.forwardRef<PortraitBookInstance, IBookPageProps>(
                             <IPage page={prev} right={false} {...iPageProps} />
                         )}
                     </Animated.View>
-                </PanGestureHandler>
+                </GestureDetector>
             </Animated.View>
         );
     }
@@ -352,7 +368,7 @@ const IPage: React.FC<IPageProps> = ({
         };
 
         if (!right) {
-            style['left'] = 0;
+            style.left = 0;
         } else {
             // style['right'] = 0;
         }
