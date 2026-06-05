@@ -3,7 +3,7 @@ import { Platform, Pressable, StyleSheet, View, ViewStyle } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
     Easing,
-    Extrapolate,
+    Extrapolation,
     interpolate,
     runOnJS,
     useAnimatedStyle,
@@ -98,8 +98,6 @@ const BookPagePortraitInner = <T,>(
             }
             const targetDegrees = id < 0 ? -180 : 180;
             rotateYAsDeg.value = withTiming(targetDegrees, timingConfig, () => {
-                rotateYAsDeg.value = 0;
-                x.value = 0;
                 runOnJS(onPageFlip)(id, false);
             });
         },
@@ -121,6 +119,11 @@ const BookPagePortraitInner = <T,>(
         };
     }, []);
 
+    useEffect(() => {
+        rotateYAsDeg.value = 0;
+        x.value = 0;
+    }, [current, rotateYAsDeg, x]);
+
     const getDegreesForX = (x: number) => {
         'worklet';
 
@@ -128,7 +131,7 @@ const BookPagePortraitInner = <T,>(
             x,
             [-containerSize.width, 0, containerSize.width],
             [180, 0, -180],
-            Extrapolate.CLAMP
+            Extrapolation.CLAMP
         );
         return val;
     };
@@ -184,8 +187,6 @@ const BookPagePortraitInner = <T,>(
                     const degrees = getDegreesForX(snapTo);
                     x.value = snapTo;
                     if (rotateYAsDeg.value === degrees) {
-                        rotateYAsDeg.value = 0;
-                        x.value = 0;
                         runOnJS(onPageFlip)(id, false);
                     } else {
                         runOnJS(setIsAnimating)(true);
@@ -204,8 +205,6 @@ const BookPagePortraitInner = <T,>(
                                 duration: duration,
                             },
                             () => {
-                                rotateYAsDeg.value = 0;
-                                x.value = 0;
                                 runOnJS(onPageFlip)(id, false);
                             }
                         );
@@ -324,7 +323,7 @@ const IPage = <T,>({
                 Math.abs(rotateYAsDeg.value),
                 [0, 180],
                 [0, 180],
-                Extrapolate.CLAMP
+                Extrapolation.CLAMP
             );
         }
 
@@ -332,7 +331,7 @@ const IPage = <T,>({
             rotateYAsDeg.value,
             [0, 180],
             [0, 180],
-            Extrapolate.CLAMP
+            Extrapolation.CLAMP
         );
     });
 
@@ -361,7 +360,7 @@ const IPage = <T,>({
             rotationVal.value,
             [0, 160],
             [containerWidth, -20],
-            Extrapolate.CLAMP
+            Extrapolation.CLAMP
         );
 
         const style: ViewStyle = {

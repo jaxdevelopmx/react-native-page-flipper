@@ -1,6 +1,6 @@
 import React from 'react';
 import Animated, {
-    Extrapolate,
+    Extrapolation,
     interpolate,
     useAnimatedStyle,
 } from 'react-native-reanimated';
@@ -31,7 +31,7 @@ const FrontShadow: React.FC<FrontShadowProps> = ({
             degrees.value,
             [-180, -100, 0, 100, 180],
             [0, 0.7, 1, 0.7, 0],
-            Extrapolate.CLAMP
+            Extrapolation.CLAMP
         );
         const fix = right ? { right: -shadowWidth } : { left: -shadowWidth };
 
@@ -49,7 +49,7 @@ const FrontShadow: React.FC<FrontShadowProps> = ({
             degrees.value,
             [-150, 0, 150],
             [6, 1, 6],
-            Extrapolate.CLAMP
+            Extrapolation.CLAMP
         );
 
         return {
