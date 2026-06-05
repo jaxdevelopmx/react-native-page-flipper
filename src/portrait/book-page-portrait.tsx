@@ -113,8 +113,14 @@ const BookPagePortraitInner = <T,>(
     }, []);
 
     useEffect(() => {
-        rotateYAsDeg.value = withTiming(0, { duration: 200, easing: Easing.out(Easing.cubic) });
-        x.value = withTiming(0, { duration: 200, easing: Easing.out(Easing.cubic) });
+        rotateYAsDeg.value = withTiming(0, {
+            duration: 200,
+            easing: Easing.out(Easing.cubic),
+        });
+        x.value = withTiming(0, {
+            duration: 200,
+            easing: Easing.out(Easing.cubic),
+        });
     }, [current, prev, next, rotateYAsDeg, x]);
 
     const getDegreesForX = (x: number) => {
@@ -361,10 +367,10 @@ const IPage = <T,>({
         return style;
     });
 
-  const frontPageStyle = getPageStyle(right, true);
-  const backPageStyle = getPageStyle(right, false);
+    const frontPageStyle = getPageStyle(right, true);
+    const backPageStyle = getPageStyle(right, false);
 
-  const shadowProps = {
+    const shadowProps = {
         right: true,
         degrees: rotationVal,
         width: containerSize.width,
