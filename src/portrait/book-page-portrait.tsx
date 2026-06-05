@@ -112,6 +112,11 @@ const BookPagePortraitInner = <T,>(
         };
     }, []);
 
+    useEffect(() => {
+        rotateYAsDeg.value = 0;
+        x.value = 0;
+    }, [current, prev, next, rotateYAsDeg, x]);
+
     const getDegreesForX = (x: number) => {
         'worklet';
 
