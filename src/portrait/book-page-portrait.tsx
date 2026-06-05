@@ -336,7 +336,7 @@ const IPage = <T,>({
         );
 
         return {
-            width: Math.ceil(w),
+            width: Math.max(0, Math.ceil(w)),
             zIndex: 2,
             opacity: 1,
             transform: [{ translateX: x }],
