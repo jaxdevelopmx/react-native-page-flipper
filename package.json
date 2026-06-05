@@ -14,10 +14,12 @@
         "ios"
     ],
     "scripts": {
+        "build": "bob build",
         "typescript": "tsc --noEmit",
         "lint": "eslint \"src/**/*.{js,ts,tsx}\"",
-        "dev": "pnpm watch 'pnpm prepare' ./src",
-        "prepare": "bob build"
+        "dev": "pnpm watch 'pnpm build' ./src",
+        "prepare": "node ./scripts/prepare.js",
+        "prepublishOnly": "pnpm build"
     },
     "keywords": [
         "react-native",

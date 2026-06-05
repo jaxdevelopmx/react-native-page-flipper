@@ -27,6 +27,14 @@ Expo / Web:
 pnpm add expo-linear-gradient
 ```
 
+### Install from GitHub
+
+```sh
+pnpm add github:jaxdevelopmx/react-native-page-flipper
+```
+
+Git installs use the `src/` entry (`react-native` field). No build step runs in your project.
+
 ### Local development (monorepo / link)
 
 ```json

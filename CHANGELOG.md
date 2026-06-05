@@ -4,6 +4,7 @@
 
 ### Fixed
 
+- `ERR_PNPM_PREPARE_PACKAGE` on GitHub installs (`prepare` no longer runs `bob build` in consumer projects)
 - Worklets version mismatch when consumed with Reanimated 4 (ship `react-native` source entry; bob build no longer stamps worklet plugin version)
 
 ### Added
