@@ -327,12 +327,14 @@ const IPage = <T,>({
         const x = interpolate(
             rotationVal.value,
             [0, 180],
-            [containerWidth, -containerWidth / 2]
+            [containerWidth, -containerWidth / 2],
+            Extrapolation.CLAMP
         );
         const w = interpolate(
             rotationVal.value,
             [0, 180],
-            [0, containerWidth / 2]
+            [0, containerWidth / 2],
+            Extrapolation.CLAMP
         );
 
         return {
