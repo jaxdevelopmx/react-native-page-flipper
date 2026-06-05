@@ -568,7 +568,10 @@ const PageFlipperInner = <T,>(
                                     pointerEvents="none"
                                     style={styles.prefetchPage}
                                 >
-                                    <View style={getPageStyle(false, false)}>
+                                    <View
+                                        key={String(prev.left)}
+                                        style={getPageStyle(false, false)}
+                                    >
                                         {renderPage(prev.left)}
                                     </View>
                                 </View>
@@ -578,7 +581,10 @@ const PageFlipperInner = <T,>(
                                     pointerEvents="none"
                                     style={styles.prefetchPage}
                                 >
-                                    <View style={getPageStyle(true, false)}>
+                                    <View
+                                        key={String(next.right)}
+                                        style={getPageStyle(true, false)}
+                                    >
                                         {renderPage(next.right)}
                                     </View>
                                 </View>
