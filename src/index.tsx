@@ -352,7 +352,6 @@ const PageFlipperInner = <T,>(
           : state.pageIndex + index;
 
       if (newIndex < 0 || newIndex > state.pages.length - 1) {
-        // this if condition theoretically should never occur in the first place, so it could be removed but it's here just in case
         logger('invalid page');
 
         setState({
@@ -569,10 +568,7 @@ const PageFlipperInner = <T,>(
                   pointerEvents="none"
                   style={styles.prefetchPage}
                 >
-                  <View
-                    key={String(prev.left)}
-                    style={getPageStyle(false, false)}
-                  >
+                  <View style={getPageStyle(false, false)}>
                     {renderPage(prev.left)}
                   </View>
                 </View>
@@ -582,10 +578,7 @@ const PageFlipperInner = <T,>(
                   pointerEvents="none"
                   style={styles.prefetchPage}
                 >
-                  <View
-                    key={String(next.right)}
-                    style={getPageStyle(true, false)}
-                  >
+                  <View style={getPageStyle(true, false)}>
                     {renderPage(next.right)}
                   </View>
                 </View>

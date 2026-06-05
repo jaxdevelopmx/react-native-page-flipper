@@ -136,9 +136,10 @@ ref.current?.goToPage(3);
 ## Image flicker tips
 
 - Use `expo-image` or `react-native-fast-image`
-- Set `transition={0}` on `expo-image`
-- Provide `prefetchPage` for custom asset types
-- The library already prefetches adjacent pages for string URLs
+- On `expo-image`, always set `cachePolicy="memory-disk"` and `transition={0}` so the next page appears instantly from cache
+- `renderPage` should return an `<Image>` that fills the container (`style={{ width: '100%', height: '100%' }}`) — partial fills cause blank strips during rotation
+- Provide `prefetchPage` for custom asset types; for `expo-image` use `Image.prefetch` from `expo-image` instead of `react-native`
+- The library already prefetches adjacent pages for string URLs and keeps them mounted in a hidden layer
 
 ## Props
 

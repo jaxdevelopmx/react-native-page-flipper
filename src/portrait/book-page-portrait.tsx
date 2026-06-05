@@ -113,8 +113,8 @@ const BookPagePortraitInner = <T,>(
     }, []);
 
     useEffect(() => {
-        rotateYAsDeg.value = 0;
-        x.value = 0;
+        rotateYAsDeg.value = withTiming(0, { duration: 200, easing: Easing.out(Easing.cubic) });
+        x.value = withTiming(0, { duration: 200, easing: Easing.out(Easing.cubic) });
     }, [current, prev, next, rotateYAsDeg, x]);
 
     const getDegreesForX = (x: number) => {
@@ -361,11 +361,10 @@ const IPage = <T,>({
         return style;
     });
 
-    const frontPageStyle = getPageStyle(right, true);
-    const backPageStyle = getPageStyle(right, false);
-    const pageKey = page.left;
+  const frontPageStyle = getPageStyle(right, true);
+  const backPageStyle = getPageStyle(right, false);
 
-    const shadowProps = {
+  const shadowProps = {
         right: true,
         degrees: rotationVal,
         width: containerSize.width,
@@ -390,7 +389,6 @@ const IPage = <T,>({
                 <View style={styles.pageContainer}>
                     {renderPage && (
                         <Animated.View
-                            key={`back-${pageKey}`}
                             style={[
                                 backPageStyle,
                                 {
@@ -413,10 +411,7 @@ const IPage = <T,>({
             {/* FRONT */}
             <Animated.View style={[styles.pageContainer, portraitFrontStyle]}>
                 {renderPage && (
-                    <Animated.View
-                        key={`front-${pageKey}`}
-                        style={[frontPageStyle]}
-                    >
+                    <Animated.View style={[frontPageStyle]}>
                         {renderPage(page.left)}
                     </Animated.View>
                 )}
