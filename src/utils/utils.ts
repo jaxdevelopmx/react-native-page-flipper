@@ -2,16 +2,16 @@ import { runOnJS } from 'react-native-reanimated';
 import type { Page } from '../types';
 import type { TransformsStyle } from 'react-native';
 
-export const createPages = ({
+export const createPages = <T>({
     portrait,
     singleImageMode,
     data,
 }: {
     portrait: boolean;
     singleImageMode: boolean;
-    data: string[];
-}) => {
-    const allPages: Page[] = [];
+    data: T[];
+}): Page<T>[] => {
+    const allPages: Page<T>[] = [];
 
     if (portrait) {
         if (!singleImageMode) {
@@ -69,11 +69,11 @@ export const transformOrigin = (
     ];
 };
 
-const debug = (msg: string, val: any) => {
+const debug = (msg: string, val: unknown) => {
     console.log(msg, val);
 };
 
-export const debugValue = (msg: string, val: any) => {
+export const debugValue = (msg: string, val: unknown) => {
     'worklet';
     runOnJS(debug)(msg, val);
 };

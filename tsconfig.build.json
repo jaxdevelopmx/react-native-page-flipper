@@ -1,4 +1,4 @@
 {
-    "extends": "./tsconfig",
-    "exclude": ["exampleExpo"]
+    "extends": "./tsconfig.json",
+    "exclude": ["exampleExpo", "node_modules", "lib"]
 }

@@ -9,7 +9,7 @@ import type { Size } from '../types';
 export type IBookSpine2Props = {
     right: boolean;
     containerSize: Size;
-    degrees: Animated.SharedValue<number>;
+    degrees: import('react-native-reanimated').SharedValue<number>;
 };
 
 const shadowColors = [

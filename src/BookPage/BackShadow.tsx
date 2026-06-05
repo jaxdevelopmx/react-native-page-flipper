@@ -7,7 +7,7 @@ import Animated, {
 import { Gradient } from '../Components/Gradient';
 
 type BackShadowProps = {
-    degrees: Animated.SharedValue<number>;
+    degrees: import('react-native-reanimated').SharedValue<number>;
     right: boolean;
 };
 

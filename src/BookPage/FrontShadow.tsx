@@ -8,7 +8,7 @@ import { Gradient } from '../Components/Gradient';
 import { transformOrigin } from '../utils/utils';
 
 type FrontShadowProps = {
-    degrees: Animated.SharedValue<number>;
+    degrees: import('react-native-reanimated').SharedValue<number>;
     viewHeight: number;
     right: boolean;
 };

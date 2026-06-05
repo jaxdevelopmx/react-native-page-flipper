@@ -1,27 +1,26 @@
 {
     "compilerOptions": {
-        "baseUrl": "./",
-        "paths": {
-            "@/*": ["src/"]
-        },
+        "target": "ESNext",
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "lib": ["ESNext"],
+        "jsx": "react-jsx",
+        "strict": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "resolveJsonModule": true,
         "allowUnreachableCode": false,
         "allowUnusedLabels": false,
-        "esModuleInterop": true,
-        "importsNotUsedAsValues": "error",
-        "forceConsistentCasingInFileNames": true,
-        "jsx": "react",
-        "lib": ["esnext"],
-        "module": "esnext",
-        "moduleResolution": "node",
         "noFallthroughCasesInSwitch": true,
         "noImplicitReturns": true,
-        "noImplicitUseStrict": false,
-        "noStrictGenericChecks": false,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
-        "resolveJsonModule": true,
-        "skipLibCheck": true,
-        "strict": true,
-        "target": "esnext"
-    }
+        "baseUrl": "./",
+        "paths": {
+            "@/*": ["src/*"]
+        }
+    },
+    "include": ["src"],
+    "exclude": ["node_modules", "lib", "exampleExpo"]
 }

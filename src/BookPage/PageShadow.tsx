@@ -7,7 +7,7 @@ import { Gradient } from '../Components/Gradient';
 import type { Size } from '../types';
 
 type PageShadowProps = {
-    degrees: Animated.SharedValue<number>;
+    degrees: import('react-native-reanimated').SharedValue<number>;
     viewHeight: number;
     right: boolean;
     containerSize: Size;

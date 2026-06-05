@@ -1,21 +1,21 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { BookSpine } from './BookPage/BookSpine';
-import type { Size } from './types';
+import type { GetPageStyle, RenderPage, Size } from './types';
 
-type IBookPageBackgroundProps = {
-    left: string;
-    right: string;
+type IBookPageBackgroundProps<T = string> = {
+    left: T;
+    right: T;
     isFirstPage: boolean;
     isLastPage: boolean;
     containerSize: Size;
-    getPageStyle: (right: boolean, front: boolean) => any;
-    renderPage?: (data: any) => any;
-    renderLastPage?: () => any;
+    getPageStyle: GetPageStyle;
+    renderPage?: RenderPage<T>;
+    renderLastPage?: () => React.ReactElement;
     shouldRenderLastPage: boolean;
 };
 
-const BookPageBackground: React.FC<IBookPageBackgroundProps> = ({
+const BookPageBackground = <T,>({
     left,
     right,
     isFirstPage,
@@ -25,7 +25,7 @@ const BookPageBackground: React.FC<IBookPageBackgroundProps> = ({
     renderPage,
     renderLastPage,
     shouldRenderLastPage,
-}) => {
+}: IBookPageBackgroundProps<T>) => {
     const leftPageStyle = getPageStyle(false, true);
     const rightPageStyle = getPageStyle(true, true);
 
