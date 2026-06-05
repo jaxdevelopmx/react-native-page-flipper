@@ -363,7 +363,6 @@ const IPage = <T,>({
 
     const frontPageStyle = getPageStyle(right, true);
     const backPageStyle = getPageStyle(right, false);
-    const pageKey = page.left;
 
     const shadowProps = {
         right: true,
@@ -390,7 +389,6 @@ const IPage = <T,>({
                 <View style={styles.pageContainer}>
                     {renderPage && (
                         <Animated.View
-                            key={`back-${pageKey}`}
                             style={[
                                 backPageStyle,
                                 {
@@ -413,10 +411,7 @@ const IPage = <T,>({
             {/* FRONT */}
             <Animated.View style={[styles.pageContainer, portraitFrontStyle]}>
                 {renderPage && (
-                    <Animated.View
-                        key={`front-${pageKey}`}
-                        style={[frontPageStyle]}
-                    >
+                    <Animated.View style={[frontPageStyle]}>
                         {renderPage(page.left)}
                     </Animated.View>
                 )}
