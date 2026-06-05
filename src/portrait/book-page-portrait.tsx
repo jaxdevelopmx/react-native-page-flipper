@@ -122,7 +122,7 @@ const BookPagePortraitInner = <T,>(
     useEffect(() => {
         rotateYAsDeg.value = 0;
         x.value = 0;
-    }, [current, rotateYAsDeg, x]);
+    }, [current, prev, next, rotateYAsDeg, x]);
 
     const getDegreesForX = (x: number) => {
         'worklet';
@@ -317,22 +317,10 @@ const IPage = <T,>({
     renderPage,
 }: IPageProps<T>) => {
     const rotationVal = useDerivedValue(() => {
-        if (right) {
-            // Forward flips use negative degrees (-180); tap-to-flip uses +180.
-            return interpolate(
-                Math.abs(rotateYAsDeg.value),
-                [0, 180],
-                [0, 180],
-                Extrapolation.CLAMP
-            );
-        }
-
-        return interpolate(
-            rotateYAsDeg.value,
-            [0, 180],
-            [0, 180],
-            Extrapolation.CLAMP
-        );
+        const val = right
+            ? rotateYAsDeg.value
+            : interpolate(rotateYAsDeg.value, [-180, 0], [0, 180]);
+        return val;
     });
 
     const portraitBackStyle = useAnimatedStyle(() => {
