@@ -113,14 +113,8 @@ const BookPagePortraitInner = <T,>(
     }, []);
 
     useEffect(() => {
-        rotateYAsDeg.value = withTiming(0, {
-            duration: 200,
-            easing: Easing.out(Easing.cubic),
-        });
-        x.value = withTiming(0, {
-            duration: 200,
-            easing: Easing.out(Easing.cubic),
-        });
+        rotateYAsDeg.value = 0;
+        x.value = 0;
     }, [current, prev, next, rotateYAsDeg, x]);
 
     const getDegreesForX = (x: number) => {
