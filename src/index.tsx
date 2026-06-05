@@ -589,6 +589,44 @@ const PageFlipperInner = <T,>(
                                     </View>
                                 </View>
                             )}
+                            {renderPage &&
+                                pageIndex > 1 &&
+                                pages[pageIndex - 2] && (
+                                    <View
+                                        pointerEvents="none"
+                                        style={styles.prefetchPage}
+                                    >
+                                        <View
+                                            key={String(
+                                                pages[pageIndex - 2].left
+                                            )}
+                                            style={getPageStyle(false, false)}
+                                        >
+                                            {renderPage(
+                                                pages[pageIndex - 2].left
+                                            )}
+                                        </View>
+                                    </View>
+                                )}
+                            {renderPage &&
+                                pageIndex < pages.length - 2 &&
+                                pages[pageIndex + 2] && (
+                                    <View
+                                        pointerEvents="none"
+                                        style={styles.prefetchPage}
+                                    >
+                                        <View
+                                            key={String(
+                                                pages[pageIndex + 2].right
+                                            )}
+                                            style={getPageStyle(true, false)}
+                                        >
+                                            {renderPage(
+                                                pages[pageIndex + 2].right
+                                            )}
+                                        </View>
+                                    </View>
+                                )}
                         </View>
                     )}
                 </ContentWrapper>
