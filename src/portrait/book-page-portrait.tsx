@@ -353,7 +353,7 @@ const IPage = <T,>({
 
         const style: ViewStyle = {
             zIndex: 1,
-            width: Math.floor(w),
+            width: Math.max(0, Math.floor(w)),
         };
 
         if (!right) {
