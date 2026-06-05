@@ -96,13 +96,12 @@ const BookPagePortraitInner = <T,>(
             if (onFlipStart && typeof onFlipStart === 'function') {
                 onFlipStart(id);
             }
-            rotateYAsDeg.value = withTiming(
-                id < 0 ? -180 : 180,
-                timingConfig,
-                () => {
-                    runOnJS(onPageFlip)(id, false);
-                }
-            );
+            const targetDegrees = id < 0 ? -180 : 180;
+            rotateYAsDeg.value = withTiming(targetDegrees, timingConfig, () => {
+                rotateYAsDeg.value = 0;
+                x.value = 0;
+                runOnJS(onPageFlip)(id, false);
+            });
         },
         [onFlipStart, onPageFlip, rotateYAsDeg, setIsAnimating]
     );
@@ -121,11 +120,6 @@ const BookPagePortraitInner = <T,>(
             isMounted.current = false;
         };
     }, []);
-
-    useEffect(() => {
-        rotateYAsDeg.value = 0;
-        x.value = 0;
-    }, [current, prev, next, rotateYAsDeg, x]);
 
     const getDegreesForX = (x: number) => {
         'worklet';
@@ -190,6 +184,8 @@ const BookPagePortraitInner = <T,>(
                     const degrees = getDegreesForX(snapTo);
                     x.value = snapTo;
                     if (rotateYAsDeg.value === degrees) {
+                        rotateYAsDeg.value = 0;
+                        x.value = 0;
                         runOnJS(onPageFlip)(id, false);
                     } else {
                         runOnJS(setIsAnimating)(true);
@@ -208,6 +204,8 @@ const BookPagePortraitInner = <T,>(
                                 duration: duration,
                             },
                             () => {
+                                rotateYAsDeg.value = 0;
+                                x.value = 0;
                                 runOnJS(onPageFlip)(id, false);
                             }
                         );
@@ -320,10 +318,22 @@ const IPage = <T,>({
     renderPage,
 }: IPageProps<T>) => {
     const rotationVal = useDerivedValue(() => {
-        const val = right
-            ? rotateYAsDeg.value
-            : interpolate(rotateYAsDeg.value, [-180, 0], [0, 180]);
-        return val;
+        if (right) {
+            // Forward flips use negative degrees (-180); tap-to-flip uses +180.
+            return interpolate(
+                Math.abs(rotateYAsDeg.value),
+                [0, 180],
+                [0, 180],
+                Extrapolate.CLAMP
+            );
+        }
+
+        return interpolate(
+            rotateYAsDeg.value,
+            [0, 180],
+            [0, 180],
+            Extrapolate.CLAMP
+        );
     });
 
     const portraitBackStyle = useAnimatedStyle(() => {
