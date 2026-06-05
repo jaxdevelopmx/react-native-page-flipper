@@ -3,6 +3,8 @@
     "version": "1.0.2",
     "description": "Page Flipper",
     "main": "lib/commonjs/index",
+    "module": "lib/module/index",
+    "react-native": "src/index",
     "types": "lib/typescript/index.d.ts",
     "source": "src/index",
     "files": [
@@ -57,7 +59,7 @@
         "react-native-gesture-handler": "~2.30.0",
         "react-native-linear-gradient": "^2.6.2",
         "react-native-reanimated": "^4.2.1",
-        "react-native-worklets": "^0.7.2",
+        "react-native-worklets": "^0.7.4",
         "typescript": "~5.9.2"
     },
     "peerDependencies": {
@@ -84,10 +86,15 @@
             [
                 "commonjs",
                 {
-                    "configFile": "./babel.config.js"
+                    "configFile": "./babel.config.build.js"
                 }
             ],
-            "module",
+            [
+                "module",
+                {
+                    "configFile": "./babel.config.build.js"
+                }
+            ],
             [
                 "typescript",
                 {

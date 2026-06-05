@@ -56,6 +56,16 @@ import 'react-native-gesture-handler';
 
 Wrap your app with `GestureHandlerRootView` when using React Native CLI.
 
+### Worklets version mismatch
+
+If you see `Mismatch between JavaScript code version and Worklets Babel plugin version`, ensure:
+
+1. `react-native-worklets` matches the version required by your `react-native-reanimated` install
+2. `react-native-reanimated/plugin` is the **last** entry in your app's `babel.config.js`
+3. Restart Metro with cache cleared: `npx expo start --clear`
+
+This package ships source via the `react-native` field so Metro compiles worklets with **your** app's Babel plugins.
+
 ## Usage
 
 ```tsx

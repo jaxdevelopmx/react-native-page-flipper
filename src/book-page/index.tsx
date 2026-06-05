@@ -24,11 +24,11 @@ import type {
     RenderPage,
     Size,
 } from '../types';
-import BackShadow from './BackShadow';
-import FrontShadow from './FrontShadow';
-import PageShadow from './PageShadow';
-import { BookSpine } from './BookSpine';
-import { BookSpine2 } from './BookSpine2';
+import BackShadow from './back-shadow';
+import FrontShadow from './front-shadow';
+import PageShadow from './page-shadow';
+import { BookSpine } from './book-spine';
+import { BookSpine2 } from './book-spine-2';
 import { clamp, snapPoint } from '../utils/utils';
 export type IBookPageProps<T = string> = {
     right: boolean;

@@ -3,7 +3,7 @@ import Animated, {
     interpolate,
     useAnimatedStyle,
 } from 'react-native-reanimated';
-import { Gradient } from '../Components/Gradient';
+import { Gradient } from '../components/gradient';
 import type { Size } from '../types';
 
 export type IBookSpine2Props = {

@@ -10,11 +10,11 @@ import {
     View,
     ViewStyle,
 } from 'react-native';
-import { BookPage, BookPageInstance, IBookPageProps } from './BookPage';
+import { BookPage, BookPageInstance, IBookPageProps } from './book-page';
 import {
     BookPagePortrait,
     PortraitBookInstance,
-} from './portrait/BookPagePortrait';
+} from './portrait/book-page-portrait';
 import type {
     GetPageStyle,
     Page,
@@ -25,7 +25,7 @@ import type {
     Size,
 } from './types';
 import { createPages } from './utils/utils';
-import { BookPageBackground } from './BookPageBackground';
+import { BookPageBackground } from './book-page-background';
 
 export type {
     GetPageStyle,

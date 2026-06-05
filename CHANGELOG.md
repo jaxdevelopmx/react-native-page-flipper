@@ -2,6 +2,10 @@
 
 ## 1.0.2
 
+### Fixed
+
+- Worklets version mismatch when consumed with Reanimated 4 (ship `react-native` source entry; bob build no longer stamps worklet plugin version)
+
 ### Added
 
 - Generic `PageFlipper<T>` support for typed `data` and `renderPage`

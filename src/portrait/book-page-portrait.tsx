@@ -19,9 +19,9 @@ import type {
     RenderPage,
     Size,
 } from '../types';
-import BackShadow from '../BookPage/BackShadow';
-import FrontShadow from '../BookPage/FrontShadow';
-import PageShadow from '../BookPage/PageShadow';
+import BackShadow from '../book-page/back-shadow';
+import FrontShadow from '../book-page/front-shadow';
+import PageShadow from '../book-page/page-shadow';
 import { clamp, snapPoint } from '../utils/utils';
 
 export type IBookPageProps<T = string> = {

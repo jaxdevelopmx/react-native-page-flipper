@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { BookSpine } from './BookPage/BookSpine';
+import { BookSpine } from './book-page/book-spine';
 import type { GetPageStyle, RenderPage, Size } from './types';
 
 type IBookPageBackgroundProps<T = string> = {
