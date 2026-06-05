@@ -3,13 +3,7 @@ import useSetState from './hooks/useSetState';
 import { useAdjacentPagePrefetch } from './hooks/useAdjacentPagePrefetch';
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useRef } from 'react';
-import {
-    LayoutChangeEvent,
-    Platform,
-    StyleSheet,
-    View,
-    ViewStyle,
-} from 'react-native';
+import { LayoutChangeEvent, StyleSheet, View, ViewStyle } from 'react-native';
 import { BookPage, BookPageInstance, IBookPageProps } from './book-page';
 import {
     BookPagePortrait,
@@ -563,19 +557,6 @@ const PageFlipperInner = <T,>(
                                     ref={portraitBookPage}
                                 />
                             </View>
-                            {prev && renderPage && (
-                                <View
-                                    pointerEvents="none"
-                                    style={styles.prefetchPage}
-                                >
-                                    <View
-                                        key={String(prev.left)}
-                                        style={getPageStyle(false, false)}
-                                    >
-                                        {renderPage(prev.left)}
-                                    </View>
-                                </View>
-                            )}
                             {next && renderPage && (
                                 <View
                                     pointerEvents="none"
@@ -589,44 +570,6 @@ const PageFlipperInner = <T,>(
                                     </View>
                                 </View>
                             )}
-                            {renderPage &&
-                                pageIndex > 1 &&
-                                pages[pageIndex - 2] && (
-                                    <View
-                                        pointerEvents="none"
-                                        style={styles.prefetchPage}
-                                    >
-                                        <View
-                                            key={String(
-                                                pages[pageIndex - 2].left
-                                            )}
-                                            style={getPageStyle(false, false)}
-                                        >
-                                            {renderPage(
-                                                pages[pageIndex - 2].left
-                                            )}
-                                        </View>
-                                    </View>
-                                )}
-                            {renderPage &&
-                                pageIndex < pages.length - 2 &&
-                                pages[pageIndex + 2] && (
-                                    <View
-                                        pointerEvents="none"
-                                        style={styles.prefetchPage}
-                                    >
-                                        <View
-                                            key={String(
-                                                pages[pageIndex + 2].right
-                                            )}
-                                            style={getPageStyle(true, false)}
-                                        >
-                                            {renderPage(
-                                                pages[pageIndex + 2].right
-                                            )}
-                                        </View>
-                                    </View>
-                                )}
                         </View>
                     )}
                 </ContentWrapper>
@@ -685,6 +628,5 @@ const styles = StyleSheet.create({
         ...StyleSheet.absoluteFillObject,
         zIndex: -5,
         overflow: 'hidden',
-        opacity: Platform.OS === 'web' ? 0 : 0.01,
     },
 });
