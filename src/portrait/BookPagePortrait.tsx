@@ -1,10 +1,4 @@
-import React, {
-    useCallback,
-    useEffect,
-    useMemo,
-    useRef,
-    useState,
-} from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { Pressable, StyleSheet, View, ViewStyle } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
@@ -122,6 +116,11 @@ const BookPagePortrait = React.forwardRef<PortraitBookInstance, IBookPageProps>(
                 isMounted.current = false;
             };
         }, []);
+
+        useEffect(() => {
+            rotateYAsDeg.value = 0;
+            x.value = 0;
+        }, [current, prev, next, rotateYAsDeg, x]);
 
         const getDegreesForX = (x: number) => {
             'worklet';
@@ -318,15 +317,6 @@ const IPage: React.FC<IPageProps> = ({
     getPageStyle,
     renderPage,
 }) => {
-    const [loaded, setLoaded] = useState(right);
-
-    useEffect(() => {
-        // hack fix
-        setTimeout(() => {
-            setLoaded(true);
-        }, 50);
-    }, []);
-
     const rotationVal = useDerivedValue(() => {
         const val = right
             ? rotateYAsDeg.value
@@ -378,11 +368,7 @@ const IPage: React.FC<IPageProps> = ({
 
     const frontPageStyle = getPageStyle(right, true);
     const backPageStyle = getPageStyle(right, false);
-
-    if (!loaded) {
-        // hack fix
-        return null;
-    }
+    const pageKey = page.left;
 
     const shadowProps = {
         right: true,
@@ -409,9 +395,9 @@ const IPage: React.FC<IPageProps> = ({
                 <View style={styles.pageContainer}>
                     {renderPage && (
                         <Animated.View
+                            key={`back-${pageKey}`}
                             style={[
                                 backPageStyle,
-
                                 {
                                     opacity: 0.2,
                                     transform: [
@@ -432,7 +418,10 @@ const IPage: React.FC<IPageProps> = ({
             {/* FRONT */}
             <Animated.View style={[styles.pageContainer, portraitFrontStyle]}>
                 {renderPage && (
-                    <Animated.View style={[frontPageStyle]}>
+                    <Animated.View
+                        key={`front-${pageKey}`}
+                        style={[frontPageStyle]}
+                    >
                         {renderPage(page.left)}
                     </Animated.View>
                 )}

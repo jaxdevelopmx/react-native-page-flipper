@@ -523,7 +523,6 @@ const PageFlipper = React.forwardRef<PageFlipperInstance, IPageFlipperProps>(
                                         prev={prev}
                                         next={next}
                                         onPageFlip={onPageFlipped}
-                                        key={`right${pageIndex}`}
                                         ref={portraitBookPage}
                                     />
                                 </View>
@@ -537,6 +536,7 @@ const PageFlipper = React.forwardRef<PageFlipperInstance, IPageFlipperProps>(
                                     >
                                         {renderPage && (
                                             <View
+                                                key={next.right}
                                                 style={getPageStyle(
                                                     true,
                                                     false
