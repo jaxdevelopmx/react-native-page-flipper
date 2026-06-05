@@ -1,0 +1,3 @@
+allowBuilds:
+  husky: true
+  msgpackr-extract: true

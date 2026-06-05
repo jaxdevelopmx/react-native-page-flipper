@@ -52,12 +52,13 @@ export const createPages = ({
     return allPages;
 };
 
-type RNTransform = Exclude<TransformsStyle['transform'], undefined>;
+type TransformArray = Exclude<TransformsStyle['transform'], string | undefined>;
+type TransformItem = TransformArray[number];
 
 export const transformOrigin = (
     { x, y }: { x: number; y: number },
-    transformations: RNTransform
-): RNTransform => {
+    transformations: readonly TransformItem[]
+): TransformItem[] => {
     'worklet';
     return [
         { translateX: x },
