@@ -90,11 +90,15 @@ const BookPagePortraitInner = <T,>(
                 onFlipStart(id);
             }
             const targetDegrees = id < 0 ? -180 : 180;
-            rotateYAsDeg.value = withTiming(targetDegrees, timingConfig, () => {
+            rotateYAsDeg.value = withTiming(targetDegrees, timingConfig, (finished) => {
+                if (finished) {
+                    rotateYAsDeg.value = 0;
+                    x.value = 0;
+                }
                 runOnJS(onPageFlip)(id, false);
             });
         },
-        [onFlipStart, onPageFlip, rotateYAsDeg, setIsAnimating]
+        [onFlipStart, onPageFlip, rotateYAsDeg, x, setIsAnimating]
     );
 
     React.useImperativeHandle(
@@ -111,11 +115,6 @@ const BookPagePortraitInner = <T,>(
             isMounted.current = false;
         };
     }, []);
-
-    useEffect(() => {
-        rotateYAsDeg.value = 0;
-        x.value = 0;
-    }, [current, prev, next, rotateYAsDeg, x]);
 
     const getDegreesForX = (x: number) => {
         'worklet';
