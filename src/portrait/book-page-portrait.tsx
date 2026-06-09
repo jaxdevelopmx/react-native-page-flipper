@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { Platform, Pressable, StyleSheet, View, ViewStyle } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
@@ -90,15 +90,11 @@ const BookPagePortraitInner = <T,>(
                 onFlipStart(id);
             }
             const targetDegrees = id < 0 ? -180 : 180;
-            rotateYAsDeg.value = withTiming(targetDegrees, timingConfig, (finished) => {
-                if (finished) {
-                    rotateYAsDeg.value = 0;
-                    x.value = 0;
-                }
+            rotateYAsDeg.value = withTiming(targetDegrees, timingConfig, () => {
                 runOnJS(onPageFlip)(id, false);
             });
         },
-        [onFlipStart, onPageFlip, rotateYAsDeg, x, setIsAnimating]
+        [onFlipStart, onPageFlip, rotateYAsDeg, setIsAnimating]
     );
 
     React.useImperativeHandle(
@@ -115,6 +111,11 @@ const BookPagePortraitInner = <T,>(
             isMounted.current = false;
         };
     }, []);
+
+    useLayoutEffect(() => {
+        rotateYAsDeg.value = 0;
+        x.value = 0;
+    }, [current, prev, next, rotateYAsDeg, x]);
 
     const getDegreesForX = (x: number) => {
         'worklet';
