@@ -266,7 +266,7 @@ const BookPagePortraitInner = <T,>(
                         />
                     )}
                     {current && next ? (
-                        <IPage page={current} right={true} {...iPageProps} />
+                        <IPage page={current} right={true} nextPage={next} {...iPageProps} />
                     ) : (
                         <View style={{ height: '100%', width: '100%' }}>
                             {renderPage && (
@@ -277,7 +277,7 @@ const BookPagePortraitInner = <T,>(
                         </View>
                     )}
                     {prev && (
-                        <IPage page={prev} right={false} {...iPageProps} />
+                        <IPage page={prev} right={false} nextPage={current} {...iPageProps} />
                     )}
                 </Animated.View>
             </GestureDetector>
@@ -294,6 +294,7 @@ const BookPagePortrait = React.forwardRef(BookPagePortraitInner) as <
 type IPageProps<T = string> = {
     right: boolean;
     page: Page<T>;
+    nextPage?: Page<T>;
     rotateYAsDeg: import('react-native-reanimated').SharedValue<number>;
     containerWidth: number;
     containerSize: Size;
@@ -304,6 +305,7 @@ type IPageProps<T = string> = {
 const IPage = <T,>({
     right,
     page,
+    nextPage,
     rotateYAsDeg,
     containerWidth,
     containerSize,
@@ -416,6 +418,12 @@ const IPage = <T,>({
                     </Animated.View>
                 )}
             </Animated.View>
+            {/* Pre-render next page so GPU has the texture ready before the flip completes */}
+            {nextPage && renderPage && (
+                <View style={styles.prerender}>
+                    {renderPage(nextPage.left)}
+                </View>
+            )}
         </View>
     );
 };
@@ -436,5 +444,12 @@ const styles = StyleSheet.create({
         ...(Platform.OS === 'web'
             ? { transform: [{ perspective: 1000 }] }
             : null),
+    },
+    prerender: {
+        position: 'absolute',
+        width: 1,
+        height: 1,
+        overflow: 'hidden',
+        opacity: 0,
     },
 });
