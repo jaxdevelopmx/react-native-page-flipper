@@ -388,7 +388,13 @@ const BookPageInner = <T,>(
                 {backUrl && renderPage && (
                     <View
                         pointerEvents="none"
-                        style={[backPageStyle, { zIndex: -10, opacity: 0.99 }]}
+                        style={{
+                            position: 'absolute',
+                            width: '100%',
+                            height: '100%',
+                            overflow: 'hidden',
+                            opacity: 0,
+                        }}
                     >
                         {renderPage(backUrl)}
                     </View>

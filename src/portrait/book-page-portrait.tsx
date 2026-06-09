@@ -438,13 +438,13 @@ const IPage = <T,>({
             {nextPage && renderPage && (
                 <View
                     pointerEvents="none"
-                    style={[
-                        frontPageStyle,
-                        {
-                            zIndex: -1,
-                            opacity: 0.99,
-                        },
-                    ]}
+                    style={{
+                        position: 'absolute',
+                        width: containerWidth,
+                        height: containerSize.height,
+                        overflow: 'hidden',
+                        opacity: 0,
+                    }}
                 >
                     {renderPage(nextPage.left)}
                 </View>
