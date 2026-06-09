@@ -1,10 +1,4 @@
-import React, {
-    useCallback,
-    useEffect,
-    useMemo,
-    useRef,
-    useState,
-} from 'react';
+import React, { useCallback, useLayoutEffect, useMemo } from 'react';
 import { Platform, Pressable, StyleSheet, View, ViewStyle } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
@@ -83,10 +77,8 @@ const BookPageInner = <T,>(
 ) => {
     const x = useSharedValue(0);
     const startX = useSharedValue(0);
-    const isMounted = useRef(false);
     const rotateYAsDeg = useSharedValue(0);
-    const [isDragging, setIsDragging] = useState(false);
-    const isDraggingRef = useRef(false);
+    const isDragging = useSharedValue(0);
     const containerWidth = containerSize.width;
     const containerHeight = containerSize.height;
     const leftPSnapPoints = [0, containerWidth];
@@ -95,27 +87,14 @@ const BookPageInner = <T,>(
     const gesturesEnabled = enabled && !isAnimating;
     const showSpine = true;
 
-    // might not need this useEffect
-    // useEffect(() => {
-    //   if (!enabled) {
-    //     setIsDragging(false);
-    //   }
-    // }, [enabled]);
-
-    useEffect(() => {
-        isMounted.current = true;
-        return () => {
-            isMounted.current = false;
-        };
-    }, []);
-
-    useEffect(() => {
+    useLayoutEffect(() => {
         rotateYAsDeg.value = 0;
         x.value = 0;
-    }, [front, back, rotateYAsDeg, x]);
+        isDragging.value = 0;
+    }, [front, back, rotateYAsDeg, x, isDragging]);
 
     const turnPage = useCallback(() => {
-        setIsDragging(true);
+        isDragging.value = 1;
         setIsAnimating(true);
         const id = right ? 1 : -1;
 
@@ -131,7 +110,7 @@ const BookPageInner = <T,>(
         );
     }, [
         onFlipStart,
-        setIsDragging,
+        isDragging,
         right,
         onPageFlip,
         rotateYAsDeg,
@@ -145,20 +124,6 @@ const BookPageInner = <T,>(
         }),
         [turnPage]
     );
-
-    const onDrag = useCallback((val: boolean) => {
-        if (!isMounted.current) {
-            return;
-        }
-
-        if (isDraggingRef.current === val) {
-            // same value
-            return;
-        }
-
-        setIsDragging(val);
-        isDraggingRef.current = val;
-    }, []);
 
     const backStyle = useAnimatedStyle(() => {
         const degrees = rotateYAsDeg.value;
@@ -215,7 +180,7 @@ const BookPageInner = <T,>(
         return {
             flex: 1,
             // backgroundColor: 'white',
-            zIndex: isDragging ? 100 : 0,
+            zIndex: isDragging.value ? 100 : 0,
         };
     });
 
@@ -249,7 +214,7 @@ const BookPageInner = <T,>(
                     }
                 })
                 .onUpdate((event) => {
-                    runOnJS(onDrag)(true);
+                    isDragging.value = 1;
                     x.value = startX.value + event.translationX;
                     rotateYAsDeg.value = interpolate(
                         x.value,
@@ -297,7 +262,7 @@ const BookPageInner = <T,>(
                             },
                             () => {
                                 if (snapTo === 0) {
-                                    runOnJS(onDrag)(false);
+                                    isDragging.value = 0;
                                 }
                                 runOnJS(onPageFlip)(id, false);
                             }
@@ -314,7 +279,6 @@ const BookPageInner = <T,>(
             onPageDrag,
             onPageDragEnd,
             onPageFlip,
-            onDrag,
             setIsAnimating,
         ]
     );

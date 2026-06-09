@@ -462,12 +462,48 @@ const PageFlipperInner = <T,>(
         ]
     );
 
+    const bookPageProps = useMemo<
+        Omit<IBookPageProps<T>, 'right' | 'front' | 'back'>
+    >(
+        () => ({
+            containerSize,
+            isAnimating: state.isAnimating,
+            enabled,
+            setIsAnimating,
+            isAnimatingRef,
+            onPageFlip: onPageFlipped,
+            getPageStyle,
+            single: singleImageMode,
+            onFlipStart,
+            onPageDrag,
+            onPageDragEnd,
+            onPageDragStart,
+            isPressable: pressable,
+            renderPage,
+        }),
+        [
+            containerSize,
+            state.isAnimating,
+            enabled,
+            setIsAnimating,
+            isAnimatingRef,
+            onPageFlipped,
+            getPageStyle,
+            singleImageMode,
+            onFlipStart,
+            onPageDrag,
+            onPageDragEnd,
+            onPageDragStart,
+            pressable,
+            renderPage,
+        ]
+    );
+
     if (!state.initialized) {
         return null;
     }
 
-    const { current, pageIndex, pages, next, prev, isPortrait, isAnimating } =
-        state;
+    const { current, pageIndex, pages, next, prev, isPortrait } = state;
 
     const isFirstPage = pageIndex === 0;
     const isLastPage = pageIndex === pages.length - 1;
@@ -476,23 +512,6 @@ const PageFlipperInner = <T,>(
         (isSecondToLastPage || isLastPage) &&
         singleImageMode &&
         data.length % 2 !== 0;
-
-    const bookPageProps: Omit<IBookPageProps<T>, 'right' | 'front' | 'back'> = {
-        containerSize: containerSize,
-        isAnimating: isAnimating,
-        enabled,
-        setIsAnimating: setIsAnimating,
-        isAnimatingRef: isAnimatingRef,
-        onPageFlip: onPageFlipped,
-        getPageStyle,
-        single: singleImageMode,
-        onFlipStart,
-        onPageDrag,
-        onPageDragEnd,
-        onPageDragStart,
-        isPressable: pressable,
-        renderPage,
-    };
 
     const ContentWrapper = renderContainer ? renderContainer : Wrapper;
 
@@ -544,6 +563,25 @@ const PageFlipperInner = <T,>(
                                 renderLastPage={renderLastPage}
                                 shouldRenderLastPage={shouldRenderLastPage}
                             />
+                            {next && renderPage && (
+                                <View
+                                    pointerEvents="none"
+                                    style={styles.prefetchPage}
+                                >
+                                    <View
+                                        key={String(next.right)}
+                                        style={getPageStyle(true, false)}
+                                    >
+                                        {renderPage(next.right)}
+                                    </View>
+                                    <View
+                                        key={String(next.left)}
+                                        style={getPageStyle(false, false)}
+                                    >
+                                        {renderPage(next.left)}
+                                    </View>
+                                </View>
+                            )}
                         </View>
                     ) : (
                         <View style={styles.portraitContent}>
