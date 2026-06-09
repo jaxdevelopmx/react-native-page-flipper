@@ -384,6 +384,15 @@ const BookPageInner = <T,>(
                         />
                     )}
                 </Animated.View>
+                {/* Pre-render back page at full size for GPU texture warm-up */}
+                {backUrl && renderPage && (
+                    <View
+                        pointerEvents="none"
+                        style={[backPageStyle, { zIndex: -10, opacity: 0.99 }]}
+                    >
+                        {renderPage(backUrl)}
+                    </View>
+                )}
             </Animated.View>
         </GestureDetector>
     );

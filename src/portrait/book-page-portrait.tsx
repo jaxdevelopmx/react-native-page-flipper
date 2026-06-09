@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import React, {
+    useCallback,
+    useEffect,
+    useLayoutEffect,
+    useMemo,
+    useRef,
+} from 'react';
 import { Platform, Pressable, StyleSheet, View, ViewStyle } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
@@ -266,7 +272,12 @@ const BookPagePortraitInner = <T,>(
                         />
                     )}
                     {current && next ? (
-                        <IPage page={current} right={true} nextPage={next} {...iPageProps} />
+                        <IPage
+                            page={current}
+                            right={true}
+                            nextPage={next}
+                            {...iPageProps}
+                        />
                     ) : (
                         <View style={{ height: '100%', width: '100%' }}>
                             {renderPage && (
@@ -277,7 +288,12 @@ const BookPagePortraitInner = <T,>(
                         </View>
                     )}
                     {prev && (
-                        <IPage page={prev} right={false} nextPage={current} {...iPageProps} />
+                        <IPage
+                            page={prev}
+                            right={false}
+                            nextPage={current}
+                            {...iPageProps}
+                        />
                     )}
                 </Animated.View>
             </GestureDetector>
@@ -418,9 +434,18 @@ const IPage = <T,>({
                     </Animated.View>
                 )}
             </Animated.View>
-            {/* Pre-render next page so GPU has the texture ready before the flip completes */}
+            {/* Pre-render next page at full size so GPU has the texture ready */}
             {nextPage && renderPage && (
-                <View style={styles.prerender}>
+                <View
+                    pointerEvents="none"
+                    style={[
+                        frontPageStyle,
+                        {
+                            zIndex: -1,
+                            opacity: 0.99,
+                        },
+                    ]}
+                >
                     {renderPage(nextPage.left)}
                 </View>
             )}
@@ -444,12 +469,5 @@ const styles = StyleSheet.create({
         ...(Platform.OS === 'web'
             ? { transform: [{ perspective: 1000 }] }
             : null),
-    },
-    prerender: {
-        position: 'absolute',
-        width: 1,
-        height: 1,
-        overflow: 'hidden',
-        opacity: 0,
     },
 });

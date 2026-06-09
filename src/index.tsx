@@ -224,7 +224,7 @@ const PageFlipperInner = <T,>(
         };
         initialize();
         // eslint-disable-next-line
-  }, [data, portrait, singleImageMode]);
+    }, [data, portrait, singleImageMode]);
 
     useEffect(() => {
         if (state.nextPageIndex !== undefined) {
@@ -241,7 +241,7 @@ const PageFlipperInner = <T,>(
             }
         }
         // eslint-disable-next-line
-  }, [state.nextPageIndex]);
+    }, [state.nextPageIndex]);
 
     const goToPage = useCallback(
         (index: number) => {
