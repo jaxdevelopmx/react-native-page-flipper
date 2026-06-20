@@ -135,12 +135,6 @@ const BookPagePortraitInner = <T,>(
         return val;
     };
 
-    const containerStyle = useAnimatedStyle(() => {
-        return {
-            flex: 1,
-        };
-    });
-
     const gesturesEnabled = enabled && !isAnimating;
 
     const panGesture = useMemo(
@@ -234,9 +228,9 @@ const BookPagePortraitInner = <T,>(
     };
 
     return (
-        <Animated.View style={containerStyle}>
+        <View style={{ flex: 1 }}>
             <GestureDetector gesture={panGesture}>
-                <Animated.View style={containerStyle}>
+                <View style={{ flex: 1 }}>
                     {isPressable && prev && (
                         <Pressable
                             disabled={isAnimating}
@@ -295,9 +289,9 @@ const BookPagePortraitInner = <T,>(
                             {...iPageProps}
                         />
                     )}
-                </Animated.View>
+                </View>
             </GestureDetector>
-        </Animated.View>
+        </View>
     );
 };
 
@@ -370,11 +364,7 @@ const IPage = <T,>({
             width: Math.max(0, Math.floor(w)),
         };
 
-        if (!right) {
-            style.left = 0;
-        } else {
-            // style['right'] = 0;
-        }
+        style.left = 0;
 
         return style;
     });
