@@ -517,6 +517,19 @@ const PageFlipperInner = <T,>(
 
     return (
         <View style={styles.container} onLayout={onLayout}>
+            {/* DEBUG: cyan box depends on nothing — shows if root renders */}
+            <View
+                pointerEvents="none"
+                style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: 100,
+                    height: 100,
+                    backgroundColor: 'cyan',
+                    zIndex: 99999,
+                }}
+            />
             <View
                 style={[
                     styles.contentContainer,
@@ -527,6 +540,15 @@ const PageFlipperInner = <T,>(
                     contentContainerStyle,
                 ]}
             >
+                {/* DEBUG: magenta fill depends on containerSize being non-zero */}
+                <View
+                    pointerEvents="none"
+                    style={{
+                        ...StyleSheet.absoluteFillObject,
+                        backgroundColor: 'magenta',
+                        zIndex: 1,
+                    }}
+                />
                 <ContentWrapper>
                     {!isPortrait ? (
                         <View style={styles.content}>
