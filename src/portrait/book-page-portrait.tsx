@@ -322,11 +322,6 @@ const IPage = <T,>({
     getPageStyle,
     renderPage,
 }: IPageProps<T>) => {
-    const containerWidthSV = useSharedValue(containerWidth);
-    useEffect(() => {
-        containerWidthSV.value = containerWidth;
-    }, [containerWidth, containerWidthSV]);
-
     const rotationVal = useDerivedValue(() => {
         const val = right
             ? rotateYAsDeg.value
@@ -335,17 +330,16 @@ const IPage = <T,>({
     });
 
     const portraitBackStyle = useAnimatedStyle(() => {
-        const cw = containerWidthSV.value;
         const x = interpolate(
             rotationVal.value,
             [0, 180],
-            [cw, -cw / 2],
+            [containerWidth, -containerWidth / 2],
             Extrapolation.CLAMP
         );
         const w = interpolate(
             rotationVal.value,
             [0, 180],
-            [0, cw / 2],
+            [0, containerWidth / 2],
             Extrapolation.CLAMP
         );
 
@@ -358,11 +352,10 @@ const IPage = <T,>({
     });
 
     const portraitFrontStyle = useAnimatedStyle(() => {
-        const cw = containerWidthSV.value;
         const w = interpolate(
             rotationVal.value,
             [0, 160],
-            [cw, -20],
+            [containerWidth, -20],
             Extrapolation.CLAMP
         );
 
