@@ -5,7 +5,7 @@ import React, {
     useMemo,
     useRef,
 } from 'react';
-import { Platform, Pressable, StyleSheet, View, ViewStyle } from 'react-native';
+import { Platform, Pressable, StyleSheet, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
     Easing,
@@ -322,6 +322,11 @@ const IPage = <T,>({
     getPageStyle,
     renderPage,
 }: IPageProps<T>) => {
+    const containerWidthSV = useSharedValue(containerWidth);
+    useEffect(() => {
+        containerWidthSV.value = containerWidth;
+    }, [containerWidth, containerWidthSV]);
+
     const rotationVal = useDerivedValue(() => {
         const val = right
             ? rotateYAsDeg.value
@@ -330,16 +335,17 @@ const IPage = <T,>({
     });
 
     const portraitBackStyle = useAnimatedStyle(() => {
+        const cw = containerWidthSV.value;
         const x = interpolate(
             rotationVal.value,
             [0, 180],
-            [containerWidth, -containerWidth / 2],
+            [cw, -cw / 2],
             Extrapolation.CLAMP
         );
         const w = interpolate(
             rotationVal.value,
             [0, 180],
-            [0, containerWidth / 2],
+            [0, cw / 2],
             Extrapolation.CLAMP
         );
 
@@ -352,21 +358,19 @@ const IPage = <T,>({
     });
 
     const portraitFrontStyle = useAnimatedStyle(() => {
+        const cw = containerWidthSV.value;
         const w = interpolate(
             rotationVal.value,
             [0, 160],
-            [containerWidth, -20],
+            [cw, -20],
             Extrapolation.CLAMP
         );
 
-        const style: ViewStyle = {
+        return {
             zIndex: 1,
             width: Math.max(0, Math.floor(w)),
+            left: 0,
         };
-
-        style.left = 0;
-
-        return style;
     });
 
     const frontPageStyle = getPageStyle(right, true);
